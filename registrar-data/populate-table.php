@@ -44,13 +44,13 @@ if ($debug)
 require_once('myDatabase.php');
 
 // set up variables for database
-$dbUserName = 'xxxxx_admin';
+$dbUserName = get_current_user() . '_admin';
 
 $whichPass = "a"; //flag for which one to use.
-$dbName = 'XXXXX_cs148_courses';
+
+$dbName = strtoupper(get_current_user()) . '_UVM_Courses';
 
 $thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
-
 
 // Process file
 $file = fopen($url, "r");
@@ -79,7 +79,7 @@ if ($file) {
         print_r($records);
         print "</pre></p>";
     }
-    
+ 
 //Create tables if they dont exisit
 // -- Table structure for table `tblTeachers`
     $query = "DROP TABLE IF EXISTS tblTeachers";

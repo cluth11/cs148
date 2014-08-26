@@ -63,6 +63,7 @@ $dbName = strtoupper(get_current_user()) . '_UVM_Courses';
 
 $thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
 
+
 $phpSelf = htmlentities($_SERVER['PHP_SELF'], ENT_QUOTES, "UTF-8");
 $path_parts = pathinfo($phpSelf);
 print '<body id="' . $path_parts['filename'] . '">';
