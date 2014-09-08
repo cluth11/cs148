@@ -80,9 +80,8 @@ print "<h2>Database: " .  $dbName . "</h2>";
 
 // print out a list of all the tables and their description
 // make each table name a link to display the record
-print "<section id='tables'>";
+print "<section id='tables2'>";
 
-$tableNameName = "Tables_in_" . $dbName;
 print "<table>";
 
 $query = "SHOW TABLES";
@@ -177,6 +176,5 @@ if($tableName!=""){
 }
 
 ?>
-</div>
 </body>
 </html>

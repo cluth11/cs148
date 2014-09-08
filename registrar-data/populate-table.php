@@ -88,6 +88,8 @@ if ($file) {
     $query .= "fldLastName varchar(100) NOT NULL, ";
     $query .= "fldFirstName varchar(100) NOT NULL, ";
     $query .= "pmkNetId varchar(12) NOT NULL, ";
+    $query .= "fldSalary int(11) NOT NULL, ";
+    $query .= "fldPhone varchar(7) NOT NULL, ";
     $query .= "PRIMARY KEY (pmkNetId)";
     $query .= ") ENGINE=InnoDB DEFAULT CHARSET=utf8";
     $results = $thisDatabase->insert($query);
@@ -113,7 +115,7 @@ if ($file) {
     $query = "CREATE TABLE IF NOT EXISTS tblSections ( ";
     $query .= "fnkCourseId int(11) NOT NULL, ";
     $query .= "fldCRN int(11) NOT NULL, ";
-    $query .= "fnkTeacherId int(11) NOT NULL, ";
+    $query .= "fnkTeacherNetId varchar(12) NOT NULL, ";
     $query .= "fldMaxStudents int(11) NOT NULL, ";
     $query .= "fldNumStudents int(11) NOT NULL, ";
     $query .= "fldSection varchar(3) NOT NULL, ";
@@ -123,9 +125,11 @@ if ($file) {
      $query .= "fldDays varchar(8) NOT NULL, ";
     $query .= "fldBuilding varchar(10) NOT NULL, ";
      $query .= "fldRoom varchar(5) NOT NULL, ";
-    $query .= "PRIMARY KEY (`fnkCourseId`,`fldCRN`,`fnkTeacherId`)";
+    $query .= "PRIMARY KEY (`fnkCourseId`,`fldCRN`,`fnkTeacherNetId`)";
     $query .= ") ENGINE=InnoDB DEFAULT CHARSET=utf8";
+
     $results = $thisDatabase->insert($query);
+
     $outputBuffer[] = "<p>tblSections Created.</p>";
 } else {
     if ($debug)
@@ -177,16 +181,22 @@ foreach ($records as $oneClass) {
     $title = $oneClass[2];
 
 // teacher table:
-    $query = "INSERT IGNORE INTO tblTeachers(fldLastName, fldFirstName, pmkNetId) ";
-    $query .= "VALUES (?, ?, ?)";
-    $data = explode(', ', $oneClass[15]);
+    $query = "INSERT IGNORE INTO tblTeachers(fldLastName, fldFirstName, pmkNetId, fldSalary, fldPhone) ";
+    $query .= "VALUES (?, ?, ?, ?, ?)";
+    $data = explode(', ', $oneClass[15]); // name
 
-    $data[] = $oneClass[16];
+    $data[] = $oneClass[16]; // net id
+    $data[] = rand(24000, 250000); // salary
+    $data[] = "656" . str_pad(rand(0,9999), 4, "0", STR_PAD_LEFT); // phone
+    
+    
     if ($debug) {
         print "<p>sql " . $query . "</p><p><pre> ";
         print_r($data);
         print "</pre></p>";
     }
+    $debug=false;
+    
     $results = $thisDatabase->insert($query, $data);
     if ($results) {
         $style = "background-color: green;";
@@ -198,15 +208,19 @@ foreach ($records as $oneClass) {
     $outputBuffer[] = "\t\t<th style='" . $style . "'>" . $data[0] . "</th>";
 
 // section table
-    $query = "INSERT INTO tblSections(fnkCourseId, fldCRN, fnkTeacherId, fldMaxStudents, fldNumStudents, fldSection, fldType, fldStart, fldStop, fldDays, fldBuilding, fldRoom) ";
+    $query = "INSERT INTO tblSections(fnkCourseId, fldCRN, fnkTeacherNetId, fldMaxStudents, fldNumStudents, fldSection, fldType, fldStart, fldStop, fldDays, fldBuilding, fldRoom) ";
     
     $query .= "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $data = array($pmkCourseId, $oneClass[3], $oneClass[16], $oneClass[7], $oneClass[8], $oneClass[4], $oneClass[5], $oneClass[9], $oneClass[10], $oneClass[11], $oneClass[13], $oneClass[14]);
+    
+
     if ($debug) {
         print "<p>sql " . $query . "</p><p><pre> ";
         print_r($data);
         print "</pre></p>";
     }
+
+    
     $results = $thisDatabase->insert($query, $data);
     if ($results) {
         $style = "background-color: green;";
