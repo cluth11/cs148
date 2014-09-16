@@ -15,7 +15,7 @@ if ($debug)
     print "<p>DEBUG MODE IS ON</p>";
 
 // include libraries
-require_once('myDatabase.php');
+require_once('../bin/myDatabase.php');
 
 // set up variables for database
 $dbUserName = get_current_user() . '_admin';
